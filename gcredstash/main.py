@@ -35,6 +35,11 @@ parser.add_argument(
     '--project-id',
     default=Config.PROJECT_ID, dest='project_id', type=str, help='GCP Project Id')
 parser.add_argument(
+    '--keystore-rest-api',
+    default=Config.KEYSTORE_REST_API, dest='keystore_rest_api', action='store_true',
+    help='Uses Datastore REST API (Useful for GAE Standard environment)'
+)
+parser.add_argument(
     '--location-id',
     default=Config.DEFAULT_LOCATION_ID, dest='location_id', type=str, help='Google Cloud KMS Location Id')
 parser.add_argument(
@@ -47,7 +52,7 @@ parser.add_argument(
 
 def main():
     args = parser.parse_args()
-    key_store = KeyStore(args.project_id)
+    key_store = KeyStore(args.project_id, rest_api=args.keystore_rest_api)
     kms_client = googleapiclient.discovery.build('cloudkms', 'v1')
     kms = GoogleKMS(kms_client, args.project_id, args.location_id, args.key_ring_id, key_store)
 
